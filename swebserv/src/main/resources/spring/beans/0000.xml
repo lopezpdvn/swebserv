@@ -3,6 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-   <bean id="simulation" class="me.dreilopz.swebserv.Simulation" />
+<!--    <bean id="simulation" class="me.dreilopz.swebserv.Simulation" /> -->
+   <bean id="simulation" class="edu.rit.sim.Simulation" />
+   <bean>
+   	<property name="webServer">
+   		<value type="java.lang.Class">me.dreilopz.swebserv.ssWebServer</value>
+   	</property>
+   </bean>
+<!--    <bean id="webServer" class="me.dreilopz.swebserv.WebServer" /> -->
 
 </beans>

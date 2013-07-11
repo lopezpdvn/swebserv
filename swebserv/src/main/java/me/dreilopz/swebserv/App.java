@@ -11,15 +11,15 @@ public class App
 {
     public static void main( String[] args )
     {
+	   	//ApplicationContext appContext = 
+	       		//new ClassPathXmlApplicationContext("spring/beans/0000.xml");
 
-	   	ApplicationContext appContext = 
-	       		new ClassPathXmlApplicationContext("spring/beans/0000.xml");
-	   	Simulation sim = (Simulation)appContext.getBean("simulation");
+//	   	Simulation sim = (Simulation)appContext.getBean("simulation");
 	   	log("START of swebserv.App");
-        log(sim.toString());
-        log(sim.performSimulation());
+//        log(sim.toString());
+//        log(sim.performSimulation());
+	   	ssWebServer.main(new String[] {"8", "10", "100", "142857"});
     	log("END");
-
     }
     
     static void log(String msg) {
