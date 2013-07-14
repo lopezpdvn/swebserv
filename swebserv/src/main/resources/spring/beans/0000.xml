@@ -4,12 +4,31 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 <!--    <bean id="simulation" class="me.dreilopz.swebserv.Simulation" /> -->
-   <bean id="simulation" class="edu.rit.sim.Simulation" />
-   <bean>
-   	<property name="webServer">
-   		<value type="java.lang.Class">me.dreilopz.swebserv.ssWebServer</value>
-   	</property>
-   </bean>
+<!--    <bean id="simulation" class="edu.rit.sim.Simulation" /> -->
+<!--    <bean> -->
+<!--    	<property name="webServer"> -->
+<!--    		<value type="java.lang.Class">me.dreilopz.swebserv.ssWebServer</value> -->
+<!--    	</property> -->
+<!--    </bean> -->
+   
 <!--    <bean id="webServer" class="me.dreilopz.swebserv.WebServer" /> -->
-
+   
+	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng">
+		<property name="seed">
+			<value type="long">954234356</value>
+		</property>
+   	</bean>
+   	
+   	<bean id="expPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng"
+   		init-method="setPjExpPrng">
+		<property name="mean">
+			<value type="double">0.34</value>
+		</property>
+		<property name="uniformPrng" ref="uniformPrng" />
+	</bean>
+	
+	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer">
+	
+	
+	</bean>
 </beans>

@@ -7,6 +7,6 @@ package me.dreilopz.swebserv;
  * @author dreilopz0
  *
  */
-public interface WebServer {
-	void simulate();
+public interface UniformPrng {
+	double rand();
 }

@@ -1,6 +1,6 @@
 package me.dreilopz.swebserv;
 
-class SwebservException extends Exception {
+public class SwebservException extends Exception {
 
 	/**
 	 * 
