@@ -15,20 +15,40 @@
    
 	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng">
 		<property name="seed">
-			<value type="long">954234356</value>
+			<value type="long">142857</value>
 		</property>
    	</bean>
    	
-   	<bean id="expPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng"
-   		init-method="setPjExpPrng">
+   	<bean id="serverPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng"
+   		init-method="buildExpPrng">
 		<property name="mean">
-			<value type="double">0.34</value>
+			<value type="double">10</value>
 		</property>
 		<property name="uniformPrng" ref="uniformPrng" />
 	</bean>
 	
+   	<bean id="reqPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng">
+		<property name="uniformPrng" ref="uniformPrng" />
+	</bean>
+
+
+<!-- 		   	serverPrng = (ExponentialPrng)appContext.getBean("serverPrng"); -->
+<!-- 		   	reqPrng = (ExponentialPrng)appContext.getBean("reqPrng"); -->
+<!-- 		   	reqPrng.setMean(lambda); -->
+<!-- 		   	reqPrng.buildExpPrng(); -->
+<!-- 			webServer = (WebServer)appContext.getBean("webServer"); -->
+<!-- 			webServer.setUniformPrng(uniformPrng); -->
+<!-- 			webServer.setServerPrng(serverPrng); -->
+<!-- 			webServer.setReqPrng(reqPrng); -->
+<!-- 			webServer.setMaxReqQueueLength(Q); -->
+<!-- 			webServer.setNReq(R); -->
+<!-- 			webServer.simulate(); -->
+
 	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer">
-	
-	
+		<property name="uniformPrng" ref="uniformPrng" />
+		<property name="serverPrng" ref="serverPrng" />
+		<property name="reqPrng" ref="reqPrng" />
+		<property name="maxReqQueueLength"><value type="long">40</value></property>
+		<property name="NReq"><value type="long">200</value></property>
 	</bean>
 </beans>

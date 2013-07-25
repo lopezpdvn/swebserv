@@ -14,23 +14,11 @@ import edu.rit.util.Random;
  */
 public class PJExponentialPrng implements ExponentialPrng {
 	private double mean;
-	private PJUniformPrng uniformPrng;
+	private UniformPrng uniformPrng;
 	
-	private edu.rit.numeric.ExponentialPrng pjExpPrng;
+	private edu.rit.numeric.ExponentialPrng expPrng;
 	
-	/**
-	 * @return the uniformPrng
-	 */
-	public PJUniformPrng getUniformPrng() {
-		return uniformPrng;
-	}
-
-	/**
-	 * @param uniformPrng the uniformPrng to set
-	 */
-	public void setUniformPrng(PJUniformPrng uniformPrng) {
-		this.uniformPrng = uniformPrng;
-	}
+	
 	
 	/**
 	 * @return the mean
@@ -42,24 +30,25 @@ public class PJExponentialPrng implements ExponentialPrng {
 	/**
 	 * @param mean the mean to set
 	 */
-	public void setMean(double mean) throws SwebservException {
-		if (mean < 0) {
-			throw new SwebservException();
-		}
+	public void setMean(double mean) {
 		this.mean = mean;
-
 	}
 
 	PJExponentialPrng() {
 		
 	}
 	
-	public void setPjExpPrng() {
-		this.pjExpPrng = new edu.rit.numeric.ExponentialPrng(
+	public void buildExpPrng() {
+		this.expPrng = new edu.rit.numeric.ExponentialPrng(
 				((PJUniformPrng)this.uniformPrng).getPrng(), this.mean);
 	}
 	
 	public double rand() {
-		return pjExpPrng.next();
+		return expPrng.next();
+	}
+
+	public void setUniformPrng(UniformPrng uniformPrng) {
+		this.uniformPrng = uniformPrng;
+		
 	}
 }

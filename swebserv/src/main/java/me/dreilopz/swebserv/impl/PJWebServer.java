@@ -5,6 +5,8 @@ package me.dreilopz.swebserv.impl;
 
 import java.util.LinkedList;
 
+import edu.rit.numeric.ListSeries;
+import edu.rit.numeric.Series;
 import edu.rit.sim.Event;
 import edu.rit.sim.Simulation;
 import me.dreilopz.swebserv.ExponentialPrng;
@@ -17,8 +19,10 @@ import me.dreilopz.swebserv.WebServer;
  */
 public class PJWebServer implements WebServer {
 	private double meanServiceRate;
+	private double dropRatio;
 	private long nReq;
 	private long seed;
+	private long iDrop;
 	private UniformPrng uniformPrng;
 	private ExponentialPrng reqPrng;
 	private ExponentialPrng serverPrng;
@@ -26,8 +30,14 @@ public class PJWebServer implements WebServer {
 	private LinkedList<Request> reqQueue;
 	private long iReq;
 	private Simulation sim;
+	private ListSeries waitTime;
+	
+	private double waitTimeMean;
+	private long maxReqQueueLength;
+	private double waitTimeStddev;
 	
 	private double meanReqRate;
+	private int i;
 	/**
 	 * @param meanReqRate the meanReqRate to set
 	 */
@@ -45,7 +55,7 @@ public class PJWebServer implements WebServer {
 	/**
 	 * @param nReq the nReq to set
 	 */
-	public void setnReq(long nReq) {
+	public void setNReq(long nReq) {
 		this.nReq = nReq;
 	}
 
@@ -78,86 +88,120 @@ public class PJWebServer implements WebServer {
 	}
 
 	public void simulate() {
+		reqQueue = new LinkedList<Request>();
+		sim = new Simulation();
 		generateRequest();
+		waitTime = new ListSeries();
 		sim.run();
+		Series.Stats wt = waitTime.stats();
+		this.dropRatio = ((double)iDrop) / ((double)nReq);
+		this.waitTimeMean = wt.mean;
+		this.waitTimeStddev = wt.stddev;
 	}
 	
-	private static class Request
-	{
-	private long requestNumber;
-	private int reqType;
-	private static int i = 0;
-	public Request
-		(long requestNumber)
-		{
-		this.requestNumber = requestNumber;
-		i = i == 0 ? 1 :
-			i == 1 ? 2:
-				i == 2 ? 0 :
-					-1;
-		this.reqType = i;
-		}
-	public String toString()
-		{
-		return "Request " + requestNumber + " with type " + reqType;
-		}
-	
-
-	}
 
 
 	private void generateRequest()
 	{
-	addToQueue (new Request (++ iReq));
-	if (iReq < nReq)
-		{
-		sim.doAfter (reqPrng.rand(), new Event()
-			{
-			public void perform() { generateRequest(); }
-			});
+		Request req = new Request(++ iReq, getReqType());
+		//System.out.println(req);
+		addToQueue (req);
+		if (iReq < nReq) {
+			sim.doAfter (reqPrng.rand(), new Event()
+				{
+				public void perform() { generateRequest(); }
+				});
+			}
 		}
-	}
 
 	private void addToQueue
 	(Request request)
 	{
-	System.out.printf ("%.3f %s added to queue%n",
-		sim.time(), request);
-	reqQueue.add (request);
-	if (reqQueue.size() == 1) startServing();
+		String msg = "";
+		if (reqQueue.size() < nReq)
+			{
+			reqQueue.add (request);
+			msg += "Added";
+			if (reqQueue.size() == 1) startServing();
+			}
+		else
+			{
+			msg += "Dropped";
+			++ iDrop;
+			}
+		msg += " REQUEST " + request.toString();
+		//System.out.println(msg);
 	}
 
-	private void startServing()
-	{
-	System.out.printf ("%.3f Started serving %s%n",
-		sim.time(), reqQueue.getFirst());
-	sim.doAfter (serverPrng.rand(), new Event()
-		{
-		public void perform() { removeFromQueue(); }
-		});
+	private void startServing() {
+		sim.doAfter (serverPrng.rand(), new Event()
+			{
+			public void perform() { removeFromQueue(); }
+			});
 	}
 
 	private void removeFromQueue()
 	{
-	System.out.printf ("%.3f %s removed from queue%n",
-		sim.time(), reqQueue.removeFirst());
-	if (reqQueue.size() > 0) startServing();
+		Request req = reqQueue.removeFirst();
+		String msg = "Removed REQUEST " + req.reqNo +
+					 " with waitTime " + req.waitTime();
+		//System.out.println(msg);
+		waitTime.add (req.waitTime());
+		if (reqQueue.size() > 0) startServing();
+	}
+
+	public double getWaitTimeMean() {
+		// TODO Auto-generated method stub
+		return waitTimeMean;
+	}
+
+	public double getWaitTimeStddev() {
+		// TODO Auto-generated method stub
+		return waitTimeStddev;
+	}
+
+
+	public double getDropRatio() {
+		// TODO Auto-generated method stub
+		return dropRatio;
+	}
+
+	public void setMaxReqQueueLength(long maxReqQueueLength) {
+		this.maxReqQueueLength = maxReqQueueLength;
 	}
 	
-	public PJWebServer createInstance(double meanReqRate,
-			double meanServiceRate, long nReq, long seed,
-			UniformPrng uniformPrng, ExponentialPrng reqPrng,
-			ExponentialPrng serverPrng) {
-		PJWebServer webServer = new PJWebServer();
-		webServer.meanReqRate = meanReqRate; 
-		webServer.meanServiceRate = meanServiceRate;
-		webServer.nReq = nReq;
-		webServer.seed = seed;
-		webServer.uniformPrng = uniformPrng;
-		webServer.reqPrng = reqPrng;
-		webServer.serverPrng = serverPrng;
-		webServer.reqQueue = new LinkedList<Request>();
-		webServer.sim = new Simulation();
-		return webServer;
+	class Request {
+		private double startTime;
+		private long reqNo;
+		private int reqType;
+		public Request(long reqNo, int reqType) {
+			this.reqNo = reqNo;
+			this.reqType = reqType;
+			this.startTime = sim.time();
+		}
+	
+		public String toString()
+			{
+			return "Request " + reqNo + " with type " + reqType + " with start time " + startTime;
+			}
+		public double waitTime()
+		{
+			return sim.time() - startTime;
+		}
+	}
+	
+	private int getReqType() {
+		int rt = 0;
+		if(i % 3 == 0) {
+			rt = 0;
+		} else if (i % 3 == 1) {
+			rt = 1;
+		} else if (i % 3 == 2) {
+			rt = 2;
+		}
+		i++;
+		return rt;
 	}
 }
+
+
