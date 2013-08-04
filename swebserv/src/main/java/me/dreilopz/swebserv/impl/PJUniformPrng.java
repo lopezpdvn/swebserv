@@ -24,10 +24,6 @@ class PJUniformPrng implements UniformPrng {
 		this.seed = seed;
 		this.prng = Random.getInstance(this.seed);
 	}
-	
-	public void buildUniformPrng() {
-		this.prng = Random.getInstance(this.seed);
-	}
 
 	PJUniformPrng() {
 	}

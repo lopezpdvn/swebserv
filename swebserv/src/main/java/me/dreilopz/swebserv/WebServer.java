@@ -6,7 +6,7 @@ package me.dreilopz.swebserv;
 public interface WebServer {
 	void setServerPrng(ExponentialPrng serverPrng);
 	void simulate();
-	double getWaitTimeMean();
+	double getMeanWaitTime();
 	double getWaitTimeStddev();
 	double getDropRatio();
 	long getNReq();

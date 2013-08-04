@@ -3,18 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
    
-	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng"
-		init-method="buildUniformPrng">
-		<property name="seed">
-			<value type="long">142857</value>
-		</property>
-   	</bean>
+	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng" />
    	
-   	<bean id="serverPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng"
-   		init-method="buildExpPrng">
-		<property name="mean">
-			<value type="double">10</value>
-		</property>
+   	<bean id="serverPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng" >
 		<property name="uniformPrng" ref="uniformPrng" />
 	</bean>
 	
@@ -26,9 +17,8 @@
 		<property name="reqPrng" ref="reqPrng" />
 	</bean>
 
-	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer" scope="prototype">
+	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer"
+		scope="prototype">
 		<property name="serverPrng" ref="serverPrng" />
-		<property name="maxReqQueueLength"><value type="long">20</value></property>
-		<property name="NReq"><value type="long">1000</value></property>
 	</bean>
 </beans>

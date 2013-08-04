@@ -28,7 +28,7 @@ class PJWebServer implements WebServer {
 	private Simulation sim;
 	private ListSeries waitTime;
 	
-	private double waitTimeMean;
+	private double meanWaitTime;
 	private long maxReqQueueLength;
 	private double waitTimeStddev;
 	private int i;
@@ -85,7 +85,7 @@ class PJWebServer implements WebServer {
 		sim.run();
 		Series.Stats wt = waitTime.stats();
 		this.dropRatio = ((double)iDrop) / ((double)nReq);
-		this.waitTimeMean = wt.mean;
+		this.meanWaitTime = wt.mean;
 		this.waitTimeStddev = wt.stddev;
 	}
 
@@ -138,9 +138,9 @@ class PJWebServer implements WebServer {
 		if (reqQueue.size() > 0) startServing();
 	}
 
-	public double getWaitTimeMean() {
+	public double getMeanWaitTime() {
 		// TODO Auto-generated method stub
-		return waitTimeMean;
+		return meanWaitTime;
 	}
 
 	public double getWaitTimeStddev() {

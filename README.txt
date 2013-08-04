@@ -1,5 +1,5 @@
 ===============
-sservweb README
+swebserv README
 ===============
 
 Credits
@@ -8,6 +8,5 @@ Credits
 1288433 LOPEZ HERNANDEZ PEDRO IVAN  
 1378687 CORTES TREVINO RAUL ALEJANDRO 
 1654709 ZARATE BECERRA CARLOS ALBERTO 
-
 
 .. vim: ft=rst
