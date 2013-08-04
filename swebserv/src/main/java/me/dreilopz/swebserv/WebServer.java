@@ -15,6 +15,8 @@ public interface WebServer {
 	double getWaitTimeMean();
 	double getWaitTimeStddev();
 	double getDropRatio();
+	long getNReq();
+	long getMaxReqQueueLength();
 	void setMaxReqQueueLength(long q);
 	void setNReq(long r);
 }

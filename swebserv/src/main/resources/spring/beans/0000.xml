@@ -13,7 +13,8 @@
    
 <!--    <bean id="webServer" class="me.dreilopz.swebserv.WebServer" /> -->
    
-	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng">
+	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng"
+		init-method="buildUniformPrng">
 		<property name="seed">
 			<value type="long">142857</value>
 		</property>
@@ -44,11 +45,11 @@
 <!-- 			webServer.setNReq(R); -->
 <!-- 			webServer.simulate(); -->
 
-	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer">
+	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer" scope="prototype">
 		<property name="uniformPrng" ref="uniformPrng" />
 		<property name="serverPrng" ref="serverPrng" />
 		<property name="reqPrng" ref="reqPrng" />
-		<property name="maxReqQueueLength"><value type="long">40</value></property>
-		<property name="NReq"><value type="long">200</value></property>
+		<property name="maxReqQueueLength"><value type="long">20</value></property>
+		<property name="NReq"><value type="long">1000</value></property>
 	</bean>
 </beans>

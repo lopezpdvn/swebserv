@@ -9,4 +9,5 @@ package me.dreilopz.swebserv;
  */
 public interface UniformPrng {
 	double rand();
+	long getSeed();
 }

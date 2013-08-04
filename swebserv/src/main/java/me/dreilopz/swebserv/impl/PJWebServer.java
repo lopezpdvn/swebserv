@@ -3,6 +3,8 @@
  */
 package me.dreilopz.swebserv.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import edu.rit.numeric.ListSeries;
@@ -36,14 +38,14 @@ public class PJWebServer implements WebServer {
 	private long maxReqQueueLength;
 	private double waitTimeStddev;
 	
-	private double meanReqRate;
+	//private double meanReqRate;
 	private int i;
-	/**
-	 * @param meanReqRate the meanReqRate to set
-	 */
-	public void setMeanReqRate(double meanReqRate) {
-		this.meanReqRate = meanReqRate;
-	}
+//	/**
+//	 * @param meanReqRate the meanReqRate to set
+//	 */
+//	public void setMeanReqRate(double meanReqRate) {
+//		this.meanReqRate = meanReqRate;
+//	}
 
 	/**
 	 * @param meanServiceRate the meanServiceRate to set
@@ -57,6 +59,10 @@ public class PJWebServer implements WebServer {
 	 */
 	public void setNReq(long nReq) {
 		this.nReq = nReq;
+	}
+	
+	public long getNReq() {
+		return nReq;
 	}
 
 	/**
@@ -86,20 +92,38 @@ public class PJWebServer implements WebServer {
 	public void setServerPrng(ExponentialPrng serverPrng) {
 		this.serverPrng = serverPrng;
 	}
-
-	public void simulate() {
+	
+	private void reset() {
+		iDrop = iReq = 0;
 		reqQueue = new LinkedList<Request>();
 		sim = new Simulation();
-		generateRequest();
 		waitTime = new ListSeries();
+	}
+
+	public void simulate() {
+		reset();
+		generateRequest();
 		sim.run();
 		Series.Stats wt = waitTime.stats();
 		this.dropRatio = ((double)iDrop) / ((double)nReq);
 		this.waitTimeMean = wt.mean;
 		this.waitTimeStddev = wt.stddev;
+		
+//		File f = new File("out.txt");
+//		f.delete();
+//		StringBuilder str = new StringBuilder();
+//		str.append("waitTimes ============= lambda = ");
+//		str.append(reqPrng.getMean()); str.append("\n");
+//		for(int i = 0; i < waitTime.length(); i++) {
+//			str.append((i+1) + ": " + waitTime.x(i) + "\n");
+//		}
+//		try {
+//			org.apache.commons.io.FileUtils.writeStringToFile(f, str.toString(), true);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
-	
-
 
 	private void generateRequest()
 	{
@@ -118,7 +142,7 @@ public class PJWebServer implements WebServer {
 	(Request request)
 	{
 		String msg = "";
-		if (reqQueue.size() < nReq)
+		if (reqQueue.size() < this.maxReqQueueLength)
 			{
 			reqQueue.add (request);
 			msg += "Added";
@@ -143,8 +167,8 @@ public class PJWebServer implements WebServer {
 	private void removeFromQueue()
 	{
 		Request req = reqQueue.removeFirst();
-		String msg = "Removed REQUEST " + req.reqNo +
-					 " with waitTime " + req.waitTime();
+//		String msg = "Removed REQUEST " + req.reqNo +
+//					 " with waitTime " + req.waitTime();
 		//System.out.println(msg);
 		waitTime.add (req.waitTime());
 		if (reqQueue.size() > 0) startServing();
@@ -168,6 +192,10 @@ public class PJWebServer implements WebServer {
 
 	public void setMaxReqQueueLength(long maxReqQueueLength) {
 		this.maxReqQueueLength = maxReqQueueLength;
+	}
+	
+	public long getMaxReqQueueLength() {
+		return maxReqQueueLength;
 	}
 	
 	class Request {
@@ -202,6 +230,7 @@ public class PJWebServer implements WebServer {
 		i++;
 		return rt;
 	}
+
 }
 
 

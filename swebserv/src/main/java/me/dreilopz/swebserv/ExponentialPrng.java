@@ -11,4 +11,5 @@ public interface ExponentialPrng {
 	double rand();
 	void setMean(double lambda);
 	void buildExpPrng();
+	double getMean();
 }
