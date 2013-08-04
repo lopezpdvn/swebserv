@@ -6,11 +6,7 @@ package me.dreilopz.swebserv.impl;
 import me.dreilopz.swebserv.UniformPrng;
 import edu.rit.util.Random;
 
-/**
- * @author dreilopz0
- *
- */
-public class PJUniformPrng implements UniformPrng {
+class PJUniformPrng implements UniformPrng {
 	private long seed = 0L;
 	private Random prng;
 	

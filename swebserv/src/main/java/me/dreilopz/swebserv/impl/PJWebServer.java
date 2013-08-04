@@ -10,18 +10,16 @@ import edu.rit.numeric.Series;
 import edu.rit.sim.Event;
 import edu.rit.sim.Simulation;
 import me.dreilopz.swebserv.ExponentialPrng;
-import me.dreilopz.swebserv.UniformPrng;
 import me.dreilopz.swebserv.WebServer;
 import me.dreilopz.swebserv.Request;
 
-public class PJWebServer implements WebServer {
-	private double meanServiceRate;
+class PJWebServer implements WebServer {
+	//private double meanServiceRate;
 	private double dropRatio;
 	private long nReq;
-	private long seed;
+	//private long seed;
 	private long iDrop;
-	private UniformPrng uniformPrng;
-	private ExponentialPrng reqPrng;
+	//private UniformPrng uniformPrng;
 	private ExponentialPrng serverPrng;
 	private Request reqFactory;
 	
@@ -35,12 +33,12 @@ public class PJWebServer implements WebServer {
 	private double waitTimeStddev;
 	private int i;
 
-	/**
-	 * @param meanServiceRate the meanServiceRate to set
-	 */
-	public void setMeanServiceRate(double meanServiceRate) {
-		this.meanServiceRate = meanServiceRate;
-	}
+//	/**
+//	 * @param meanServiceRate the meanServiceRate to set
+//	 */
+//	public void setMeanServiceRate(double meanServiceRate) {
+//		this.meanServiceRate = meanServiceRate;
+//	}
 
 	/**
 	 * @param nReq the nReq to set
@@ -53,26 +51,19 @@ public class PJWebServer implements WebServer {
 		return nReq;
 	}
 
-	/**
-	 * @param seed the seed to set
-	 */
-	public void setSeed(long seed) {
-		this.seed = seed;
-	}
+//	/**
+//	 * @param seed the seed to set
+//	 */
+//	public void setSeed(long seed) {
+//		this.seed = seed;
+//	}
 
-	/**
-	 * @param uniformPrng the uniformPrng to set
-	 */
-	public void setUniformPrng(UniformPrng uniformPrng) {
-		this.uniformPrng = uniformPrng;
-	}
-
-	/**
-	 * @param reqPrng the reqPrng to set
-	 */
-	public void setReqPrng(ExponentialPrng reqPrng) {
-		this.reqPrng = reqPrng;
-	}
+//	/**
+//	 * @param uniformPrng the uniformPrng to set
+//	 */
+//	public void setUniformPrng(UniformPrng uniformPrng) {
+//		this.uniformPrng = uniformPrng;
+//	}
 
 	/**
 	 * @param serverPrng the serverPrng to set
@@ -106,7 +97,7 @@ public class PJWebServer implements WebServer {
 		req.setStartTime(sim.time());
 		addToQueue (req);
 		if (iReq < nReq) {
-			sim.doAfter (reqPrng.rand(), new Event()
+			sim.doAfter (req.getArrivalTime(), new Event()
 				{
 				public void perform() { generateRequest(); }
 				});

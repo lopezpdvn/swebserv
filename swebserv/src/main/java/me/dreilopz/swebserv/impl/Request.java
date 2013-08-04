@@ -1,9 +1,12 @@
 package me.dreilopz.swebserv.impl;
 
-public class Request implements me.dreilopz.swebserv.Request {
+import me.dreilopz.swebserv.ExponentialPrng;
+
+class Request implements me.dreilopz.swebserv.Request {
 	private double startTime;
 	private long reqNo;
 	private int reqType;
+	private static ExponentialPrng reqPrng;
 	
 	private Request(){}
 	
@@ -29,5 +32,13 @@ public class Request implements me.dreilopz.swebserv.Request {
 
 	public double getStartTime() {
 		return startTime;
+	}
+
+	public void setReqPrng(ExponentialPrng reqPrng) {
+		Request.reqPrng = reqPrng;
+	}
+	
+	public double getArrivalTime() {
+		return reqPrng.rand();
 	}
 }

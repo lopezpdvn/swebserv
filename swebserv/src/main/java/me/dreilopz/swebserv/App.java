@@ -16,8 +16,7 @@ public class App
     {
     	clArgs = args;
     	configure();
-	   	performDOSAttack();
-    	log("END");
+	   	simulateDOSAttack();
     }
     
     private static void log(String msg) {
@@ -35,7 +34,7 @@ public class App
 	   	serverPrng = (ExponentialPrng)appContext.getBean("serverPrng");
     }
     
-    private static void performDOSAttack() {
+    private static void simulateDOSAttack() {
 		double lambda;
 		WebServer webServer = (WebServer)appContext.getBean("webServer");
 		System.out.printf(
@@ -47,15 +46,16 @@ public class App
 		for(int r = 0; (lambda = lambda_L + lambda_D * r) <= lambda_U; r++) {
 			simulateWebServer(lambda);
 		}
-		
     }
     
     private static void simulateWebServer(double meanReqRate) {
 	   	reqPrng = (ExponentialPrng)appContext.getBean("reqPrng");
 	   	reqPrng.setMean(meanReqRate);
 	   	reqPrng.buildExpPrng();
+	   	Request reqFactory = (Request)appContext.getBean("reqFactory");
+		reqFactory.setReqPrng(reqPrng);
 	   	WebServer webServer = (WebServer)appContext.getBean("webServer");
-		webServer.setReqPrng(reqPrng);
+		webServer.setReqFactory(reqFactory);
 		webServer.simulate();
 		System.out.printf ("%-8.3f%-8.3f%-8.3f%-8.3f%n",
 				meanReqRate, webServer.getWaitTimeMean(),

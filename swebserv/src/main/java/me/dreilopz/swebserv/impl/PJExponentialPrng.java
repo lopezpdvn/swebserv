@@ -6,17 +6,11 @@ package me.dreilopz.swebserv.impl;
 import me.dreilopz.swebserv.ExponentialPrng;
 import me.dreilopz.swebserv.UniformPrng;
 
-/**
- * @author dreilopz0
- *
- */
-public class PJExponentialPrng implements ExponentialPrng {
+class PJExponentialPrng implements ExponentialPrng {
 	private double mean;
 	private UniformPrng uniformPrng;
 	
 	private edu.rit.numeric.ExponentialPrng expPrng;
-	
-	
 	
 	/**
 	 * @return the mean

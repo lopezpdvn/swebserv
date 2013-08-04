@@ -11,4 +11,8 @@ public interface Request {
 	double getStartTime();
 
 	Request createInstance();
+
+	double getArrivalTime();
+
+	void setReqPrng(ExponentialPrng reqPrng);
 }

@@ -22,14 +22,13 @@
 		<property name="uniformPrng" ref="uniformPrng" />
 	</bean>
 
-	<bean id="reqFactory" class="me.dreilopz.swebserv.impl.Request" />
+	<bean id="reqFactory" class="me.dreilopz.swebserv.impl.Request" >
+		<property name="reqPrng" ref="reqPrng" />
+	</bean>
 
 	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer" scope="prototype">
-		<property name="uniformPrng" ref="uniformPrng" />
 		<property name="serverPrng" ref="serverPrng" />
-		<property name="reqPrng" ref="reqPrng" />
 		<property name="maxReqQueueLength"><value type="long">20</value></property>
 		<property name="NReq"><value type="long">1000</value></property>
-		<property name="reqFactory" ref="reqFactory" />
 	</bean>
 </beans>
