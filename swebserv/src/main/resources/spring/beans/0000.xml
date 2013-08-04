@@ -2,16 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-<!--    <bean id="simulation" class="me.dreilopz.swebserv.Simulation" /> -->
-<!--    <bean id="simulation" class="edu.rit.sim.Simulation" /> -->
-<!--    <bean> -->
-<!--    	<property name="webServer"> -->
-<!--    		<value type="java.lang.Class">me.dreilopz.swebserv.ssWebServer</value> -->
-<!--    	</property> -->
-<!--    </bean> -->
-   
-<!--    <bean id="webServer" class="me.dreilopz.swebserv.WebServer" /> -->
    
 	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng"
 		init-method="buildUniformPrng">
@@ -32,18 +22,7 @@
 		<property name="uniformPrng" ref="uniformPrng" />
 	</bean>
 
-
-<!-- 		   	serverPrng = (ExponentialPrng)appContext.getBean("serverPrng"); -->
-<!-- 		   	reqPrng = (ExponentialPrng)appContext.getBean("reqPrng"); -->
-<!-- 		   	reqPrng.setMean(lambda); -->
-<!-- 		   	reqPrng.buildExpPrng(); -->
-<!-- 			webServer = (WebServer)appContext.getBean("webServer"); -->
-<!-- 			webServer.setUniformPrng(uniformPrng); -->
-<!-- 			webServer.setServerPrng(serverPrng); -->
-<!-- 			webServer.setReqPrng(reqPrng); -->
-<!-- 			webServer.setMaxReqQueueLength(Q); -->
-<!-- 			webServer.setNReq(R); -->
-<!-- 			webServer.simulate(); -->
+	<bean id="reqFactory" class="me.dreilopz.swebserv.impl.Request" />
 
 	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer" scope="prototype">
 		<property name="uniformPrng" ref="uniformPrng" />
@@ -51,5 +30,6 @@
 		<property name="reqPrng" ref="reqPrng" />
 		<property name="maxReqQueueLength"><value type="long">20</value></property>
 		<property name="NReq"><value type="long">1000</value></property>
+		<property name="reqFactory" ref="reqFactory" />
 	</bean>
 </beans>

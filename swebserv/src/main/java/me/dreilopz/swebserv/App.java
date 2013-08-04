@@ -1,21 +1,12 @@
 package me.dreilopz.swebserv;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.apache.commons.io.FileUtils;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
 	private static String[] clArgs;
-	private static double lambda_L, lambda_U, lambda_D, mu;
-	private static long Q, R, seed;
+	private static double lambda_L, lambda_U, lambda_D;
 	private static UniformPrng uniformPrng;
 	private static ExponentialPrng reqPrng;
 	private static ExponentialPrng serverPrng;
@@ -26,8 +17,6 @@ public class App
     	clArgs = args;
     	configure();
 	   	performDOSAttack();
-    	//simulateWebServer(50.0);
-    	//test();
     	log("END");
     }
     
@@ -76,36 +65,7 @@ public class App
 	private static void usage()
 	{
 		log("Usage: java WebServer02 <lambda_L> <lambda_U> "+
-			 "<lambda_D> <mu> <Q> <R> <seed>");
+			 "<lambda_D>");
 		System.exit (1);
-	}
-	
-	private static void test() {
-		// Compare uniformPrngs
-		edu.rit.util.Random uniformPrngOrig = edu.rit.util.Random.getInstance (142857);
-		edu.rit.numeric.ExponentialPrng serverPrngOrig = 
-				new edu.rit.numeric.ExponentialPrng(uniformPrngOrig, 10.0);
-		edu.rit.numeric.ExponentialPrng reqPrngOrig = 
-				new edu.rit.numeric.ExponentialPrng(uniformPrngOrig, 50.0);
-		
-		
-	   	reqPrng = (ExponentialPrng)appContext.getBean("reqPrng");
-	   	reqPrng.setMean(50.0);
-	   	reqPrng.buildExpPrng();
-		
-		StringBuilder str = new StringBuilder();
-		int i;
-		for(i = 0; i < 100; i++) {
-			str.append(reqPrngOrig.next());
-			str.append(",");
-			str.append(reqPrng.rand());
-			str.append("\n");
-		}
-		try {
-			FileUtils.writeStringToFile(new File("out.txt"), str.toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

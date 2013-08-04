@@ -5,8 +5,6 @@ package me.dreilopz.swebserv.impl;
 
 import me.dreilopz.swebserv.ExponentialPrng;
 import me.dreilopz.swebserv.UniformPrng;
-import me.dreilopz.swebserv.SwebservException;
-import edu.rit.util.Random;
 
 /**
  * @author dreilopz0

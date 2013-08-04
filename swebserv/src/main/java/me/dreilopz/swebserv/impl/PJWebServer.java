@@ -3,8 +3,6 @@
  */
 package me.dreilopz.swebserv.impl;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 
 import edu.rit.numeric.ListSeries;
@@ -14,11 +12,8 @@ import edu.rit.sim.Simulation;
 import me.dreilopz.swebserv.ExponentialPrng;
 import me.dreilopz.swebserv.UniformPrng;
 import me.dreilopz.swebserv.WebServer;
+import me.dreilopz.swebserv.Request;
 
-/**
- * @author dreilopz0
- *
- */
 public class PJWebServer implements WebServer {
 	private double meanServiceRate;
 	private double dropRatio;
@@ -28,6 +23,7 @@ public class PJWebServer implements WebServer {
 	private UniformPrng uniformPrng;
 	private ExponentialPrng reqPrng;
 	private ExponentialPrng serverPrng;
+	private Request reqFactory;
 	
 	private LinkedList<Request> reqQueue;
 	private long iReq;
@@ -37,15 +33,7 @@ public class PJWebServer implements WebServer {
 	private double waitTimeMean;
 	private long maxReqQueueLength;
 	private double waitTimeStddev;
-	
-	//private double meanReqRate;
 	private int i;
-//	/**
-//	 * @param meanReqRate the meanReqRate to set
-//	 */
-//	public void setMeanReqRate(double meanReqRate) {
-//		this.meanReqRate = meanReqRate;
-//	}
 
 	/**
 	 * @param meanServiceRate the meanServiceRate to set
@@ -108,27 +96,14 @@ public class PJWebServer implements WebServer {
 		this.dropRatio = ((double)iDrop) / ((double)nReq);
 		this.waitTimeMean = wt.mean;
 		this.waitTimeStddev = wt.stddev;
-		
-//		File f = new File("out.txt");
-//		f.delete();
-//		StringBuilder str = new StringBuilder();
-//		str.append("waitTimes ============= lambda = ");
-//		str.append(reqPrng.getMean()); str.append("\n");
-//		for(int i = 0; i < waitTime.length(); i++) {
-//			str.append((i+1) + ": " + waitTime.x(i) + "\n");
-//		}
-//		try {
-//			org.apache.commons.io.FileUtils.writeStringToFile(f, str.toString(), true);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 
 	private void generateRequest()
 	{
-		Request req = new Request(++ iReq, getReqType());
-		//System.out.println(req);
+		Request req = reqFactory.createInstance();
+		req.setReqNo(++iReq);
+		req.setReqType(getReqType());
+		req.setStartTime(sim.time());
 		addToQueue (req);
 		if (iReq < nReq) {
 			sim.doAfter (reqPrng.rand(), new Event()
@@ -141,6 +116,7 @@ public class PJWebServer implements WebServer {
 	private void addToQueue
 	(Request request)
 	{
+		@SuppressWarnings("unused")
 		String msg = "";
 		if (reqQueue.size() < this.maxReqQueueLength)
 			{
@@ -167,10 +143,7 @@ public class PJWebServer implements WebServer {
 	private void removeFromQueue()
 	{
 		Request req = reqQueue.removeFirst();
-//		String msg = "Removed REQUEST " + req.reqNo +
-//					 " with waitTime " + req.waitTime();
-		//System.out.println(msg);
-		waitTime.add (req.waitTime());
+		waitTime.add (sim.time() - req.getStartTime());
 		if (reqQueue.size() > 0) startServing();
 	}
 
@@ -198,26 +171,6 @@ public class PJWebServer implements WebServer {
 		return maxReqQueueLength;
 	}
 	
-	class Request {
-		private double startTime;
-		private long reqNo;
-		private int reqType;
-		public Request(long reqNo, int reqType) {
-			this.reqNo = reqNo;
-			this.reqType = reqType;
-			this.startTime = sim.time();
-		}
-	
-		public String toString()
-			{
-			return "Request " + reqNo + " with type " + reqType + " with start time " + startTime;
-			}
-		public double waitTime()
-		{
-			return sim.time() - startTime;
-		}
-	}
-	
 	private int getReqType() {
 		int rt = 0;
 		if(i % 3 == 0) {
@@ -229,6 +182,10 @@ public class PJWebServer implements WebServer {
 		}
 		i++;
 		return rt;
+	}
+
+	public void setReqFactory(Request reqFactory) {
+		this.reqFactory = reqFactory;
 	}
 
 }
