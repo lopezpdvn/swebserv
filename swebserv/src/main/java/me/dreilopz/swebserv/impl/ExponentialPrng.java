@@ -1,16 +1,20 @@
 package me.dreilopz.swebserv.impl;
 
+import me.dreilopz.swebserv.UniformPrng;
+
 public class ExponentialPrng implements me.dreilopz.swebserv.ExponentialPrng {
+	private double mean;
+
+	private UniformPrng uniformPrng;
 
 	@Override
 	public double rand() {
-		// TODO Auto-generated method stub
-		return 0;
+		return -Math.log(this.uniformPrng.rand())/this.mean;
 	}
 
 	@Override
-	public void setMean(double lambda) {
-		// TODO Auto-generated method stub
+	public void setMean(double mean) {
+		this.mean = mean;
 		
 	}
 
@@ -23,7 +27,10 @@ public class ExponentialPrng implements me.dreilopz.swebserv.ExponentialPrng {
 	@Override
 	public double getMean() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.mean;
 	}
-
+	
+	public void setUniformPrng(UniformPrng uniformPrng) {
+		this.uniformPrng = uniformPrng;
+	}
 }

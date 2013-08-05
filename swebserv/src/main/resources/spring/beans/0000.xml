@@ -3,13 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
    
-	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng" />
+	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.UniformPrng" />
    	
-   	<bean id="serverPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng" >
+   	<bean id="serverPrng" class="me.dreilopz.swebserv.impl.ExponentialPrng" >
 		<property name="uniformPrng" ref="uniformPrng" />
 	</bean>
 	
-   	<bean id="reqPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng">
+   	<bean id="reqPrng" class="me.dreilopz.swebserv.impl.ExponentialPrng">
 		<property name="uniformPrng" ref="uniformPrng" />
 	</bean>
 
@@ -17,7 +17,7 @@
 		<property name="reqPrng" ref="reqPrng" />
 	</bean>
 
-	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer"
+	<bean id="webServer" class="me.dreilopz.swebserv.impl.WebServer"
 		scope="prototype">
 		<property name="serverPrng" ref="serverPrng" />
 	</bean>

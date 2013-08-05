@@ -69,7 +69,7 @@ public class App
 	   	uniformPrng.setSeed(seed);
 	   	serverPrng = (ExponentialPrng)appContext.getBean("serverPrng");
 	   	serverPrng.setMean(meanServiceTime);
-	   	serverPrng.buildExpPrng();
+	   	//serverPrng.buildExpPrng();
 	   	
 	   	outDir = new File(outDirPath);
 	   	if(! (outDir.exists() && outDir.canExecute() &&

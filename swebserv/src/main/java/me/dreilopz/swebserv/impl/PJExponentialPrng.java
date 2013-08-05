@@ -31,8 +31,8 @@ class PJExponentialPrng implements ExponentialPrng {
 	}
 	
 	public void buildExpPrng() {
-		this.expPrng = new edu.rit.numeric.ExponentialPrng(
-				((PJUniformPrng)this.uniformPrng).getPrng(), this.mean);
+//		this.expPrng = new edu.rit.numeric.ExponentialPrng(
+//				this.uniformPrng, this.mean);
 	}
 	
 	public double rand() {
