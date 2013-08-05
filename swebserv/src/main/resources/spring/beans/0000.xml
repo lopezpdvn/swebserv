@@ -2,7 +2,23 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+   
+	<bean id="uniformPrng" class="me.dreilopz.swebserv.impl.PJUniformPrng" />
+   	
+   	<bean id="serverPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng" >
+		<property name="uniformPrng" ref="uniformPrng" />
+	</bean>
+	
+   	<bean id="reqPrng" class="me.dreilopz.swebserv.impl.PJExponentialPrng">
+		<property name="uniformPrng" ref="uniformPrng" />
+	</bean>
 
-   <bean id="simulation" class="me.dreilopz.swebserv.Simulation" />
+	<bean id="reqFactory" class="me.dreilopz.swebserv.impl.Request" >
+		<property name="reqPrng" ref="reqPrng" />
+	</bean>
 
+	<bean id="webServer" class="me.dreilopz.swebserv.impl.PJWebServer"
+		scope="prototype">
+		<property name="serverPrng" ref="serverPrng" />
+	</bean>
 </beans>
